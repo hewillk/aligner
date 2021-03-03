@@ -21,8 +21,8 @@ $ ./hewill index /mnt/fa/hs37d5.fa
 $ ./hewill align /mnt/fa/hs37d5.fa /mnt/fq/HG001.1.fq /mnt/fq/HG001.2.fq /mnt/sam/HG001 HG001 1 80
 ```
 
-## PrecisionFDA Truth Challenge Performance
-versus [bwa-mem2]:
+## Performance
+precisionFDA [Truth Challenge] versus [bwa-mem2]:
 <img src="https://raw.githubusercontent.com/hewillk/aligner/master/performance.png" />
 
 ## Important
@@ -31,4 +31,5 @@ This aligner is highly optimized on the following sequencing characteristic (oth
 - insert size: **~550bp**
 
 [bwa-mem2]: https://github.com/bwa-mem2/bwa-mem2
+[Truth Challenge]: https://precision.fda.gov/challenges/truth
 [download]: https://ftp-trace.ncbi.nlm.nih.gov/1000genomes/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz
