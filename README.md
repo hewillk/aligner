@@ -1,5 +1,5 @@
 # Hewill Aligner
-Hewill Aligner is a highly optimized Burrow-Wheeler Aligner (using with modern c++20) specifically for Illumina HiSeq 2500 Rapid Mode WGS short-read alignment.
+Hewill Aligner is a highly optimized Burrow-Wheeler Aligner (using with modern C++20) specifically for Illumina HiSeq 2500 Rapid Mode WGS short-read alignment.
 
 ## Compiler
 - GCC >= 10.2
