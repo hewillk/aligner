@@ -10,7 +10,7 @@ using namespace biomodern::format;
 using namespace biomodern::utility;
 using namespace std::chrono;
 
-auto total = 0u;
+auto total = 0ul;
 auto mutex = std::mutex{};
 auto mutex2 = std::mutex{};
 
@@ -287,6 +287,7 @@ auto align(
 
 auto main(int argc, char* argv[]) -> int {
   if (argc == 1) {
+  Usage:
     std::cout << R"(
 Contact: Hewill Kang <hewillk@gmail.com>
 Command:
@@ -301,4 +302,6 @@ Command:
   else if (cmd == "align"s)
     // fa fq1 fq2 sam_prefix SM RGID thread_num
     align(argv[2], argv[3], argv[4], argv[5], argv[6], argv[7], std::stoi(argv[8]));
+  else
+    goto Usage;
 }
