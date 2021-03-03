@@ -30,6 +30,3 @@ This aligner is highly optimized on the following sequencing characteristic (oth
 
 [bwa-mem2]: https://github.com/bwa-mem2/bwa-mem2
 [download]: https://ftp-trace.ncbi.nlm.nih.gov/1000genomes/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz
-
-## CPU Profiler
-<img src="https://raw.githubusercontent.com/hewillk/aligner/master/cpu_profiler.pdf" />
