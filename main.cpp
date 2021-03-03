@@ -228,9 +228,9 @@ auto align(
   std::cout << "fq1 path: " << fq1_path << "\n";
   std::cout << "fq2 path: " << fq2_path << "\n";
 
-  std::cout << "using " << thread_num << " threads.\n";
-  std::cout << "assume read insert size mean: 550\n";
-  std::cout << "assume read insert size var: 150\n";
+  std::cout << "assume read length: ~148bp\n";
+  std::cout << "assume read insert size mean: ~550bp\n";
+  std::cout << "assume read insert size var: ~150bp\n";
 
   assert(fa_path.ends_with("hs37d5.fa"));
   const auto ref_path = fa_path.substr(0, fa_path.size() - 2) + "iref";
@@ -270,6 +270,8 @@ auto align(
   assert(fq1);
   assert(fq2);
 
+  std::cout << "using " << thread_num << " threads.\n";
+  std::cout << "start mapping...\n";
   auto workers = std::vector<std::thread>{};
   const auto start = high_resolution_clock::now();
   for (auto i = 0; i < thread_num; i++)
@@ -297,6 +299,6 @@ Command:
   const auto cmd = argv[1];
   if (cmd == "index"s) index(argv[2]);  // fa
   else if (cmd == "align"s)
-    // fa fq1 fq2 sam_prefix SM RGID thread
+    // fa fq1 fq2 sam_prefix SM RGID thread_num
     align(argv[2], argv[3], argv[4], argv[5], argv[6], argv[7], std::stoi(argv[8]));
 }
