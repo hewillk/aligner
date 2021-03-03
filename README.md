@@ -26,7 +26,7 @@ $ ./hewill align /mnt/fa/hs37d5.fa /mnt/fq/HG001.1.fq /mnt/fq/HG001.2.fq /mnt/sa
 ```
 
 ## Performance
-PrecisionFDA [Truth Challenge] versus [bwa-mem2]:
+PrecisionFDA [Truth Challenge] benchmark versus [bwa-mem2]:
 <img src="https://raw.githubusercontent.com/hewillk/aligner/master/performance.png" />
 
 ## Important
