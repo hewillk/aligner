@@ -1,4 +1,6 @@
 # Hewill Aligner
+Hewill Aligner is a highly optimized Burrow-Wheeler Aligner specifically for Illumina HiSeq 2500 Rapid Mode WGS short-read alignment.
+
 ## Compiler
 - GCC >= 10.2
 - Intel Threading Building Blocks (`sudo apt install libtbb-dev`)
