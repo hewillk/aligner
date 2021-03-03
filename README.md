@@ -21,7 +21,7 @@ $ ./hewill index /mnt/fa/hs37d5.fa
 $ ./hewill align /mnt/fa/hs37d5.fa /mnt/fq/HG001.1.fq /mnt/fq/HG001.2.fq /mnt/sam/HG001 HG001 1 80
 ```
 
-## Performance
+## PrecisionFDA Truth Challenge Performance
 versus [bwa-mem2]:
 <img src="https://raw.githubusercontent.com/hewillk/aligner/master/performance.png" />
 
