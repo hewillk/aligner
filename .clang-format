@@ -1,0 +1,17 @@
+---
+BasedOnStyle: Google
+IndentWidth: 2
+---
+Language: Cpp
+# Force pointers to the type for C++.
+AlignAfterOpenBracket: AlwaysBreak
+DerivePointerAlignment: false
+PointerAlignment: Left
+AllowShortBlocksOnASingleLine: Always
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: Always
+AllowShortLambdasOnASingleLine: All
+AllowShortLoopsOnASingleLine: true
+ColumnLimit: 100
+---

@@ -21,7 +21,7 @@ $ ./hewill index /mnt/fa/hs37d5.fa
 - Only support for uncompressed fastq.
 - The following command will generate *HG001.1.sam*, *HG001.2.sam*, ... *HG001.X.sam* and *HG001.Y.sam* in */mnt/sam/HG001* folder.
 ```
-// fa_path fq1_path fq2_path sam_prefix sample_name(SM) read_group(RGID) thread_num
+// fa_path fq1_path fq2_path sam_prefix sample_name(SM) read_group_id(RGID) thread_num
 $ ./hewill align /mnt/fa/hs37d5.fa /mnt/fq/HG001.1.fq /mnt/fq/HG001.2.fq /mnt/sam/HG001 HG001 1 80
 ```
 

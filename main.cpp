@@ -10,6 +10,10 @@ using namespace biomodern::format;
 using namespace biomodern::utility;
 using namespace std::chrono;
 
+auto total = 0u;
+auto mutex = std::mutex{};
+auto mutex2 = std::mutex{};
+
 auto encode_fa(std::string fa_path) {
   auto ref = ""_is;
   ref.reserve(3137454505);
@@ -53,18 +57,13 @@ auto build_fmi(istring_view ref, std::string fa_path) {
 
 auto index(std::string fa_path) {
   assert(fa_path.ends_with("hs37d5.fa"));
+  std::cout << "fa path: " << fa_path << "\n";
   auto ref = encode_fa(fa_path);
 
   // fm-index only support four characters so we need change 'N' to 'A'
   std::ranges::replace(ref, 4, 0);
   build_fmi(ref, fa_path);
 }
-
-auto total = 0u;
-auto RG_string = ""s;
-constexpr auto batch = 3000;
-auto mutex = std::mutex{};
-auto mutex2 = std::mutex{};
 
 struct Read {
   std::string name;
@@ -78,9 +77,9 @@ const auto chrs =
 
 void do_work(
     std::ifstream& fq1, std::ifstream& fq2, const Aligner& aligner, const int i,
-    std::map<std::string, std::ofstream>& fouts) {
+    std::map<std::string, std::ofstream>& fouts, std::string RG_string) {
+  constexpr auto batch = 3000;
   for (auto j = std::uint8_t{};;) {
-    // if (total >= 3000'0000) return;
     auto reads = std::vector<Read>{};
     auto chr_records = std::map<std::string, std::vector<SamRecord>>{};
     for (const auto chr : chrs) chr_records[chr];
@@ -217,14 +216,18 @@ void do_work(
         for (const auto& record : records) fouts[chr] << record << "\n";
     }
 
-    if (i == 0 && (j++ % 16) == 0) std::cout << "current reads name: " << name << '\n';
+    if (i == 0 && (j++ % 16) == 0)
+      std::cout << "current read name: " << name << " (" << total << ")\n";
   }
 }
 
 auto align(
     std::string fa_path, std::string fq1_path, std::string fq2_path, std::string sam_prefix,
     std::string SM, std::string RGID, int thread_num) {
-  RG_string = "\tRG:Z:" + RGID;
+  std::cout << "fa path: " << fa_path << "\n";
+  std::cout << "fq1 path: " << fq1_path << "\n";
+  std::cout << "fq2 path: " << fq2_path << "\n";
+
   std::cout << "using " << thread_num << " threads.\n";
   std::cout << "assume read insert size mean: 550\n";
   std::cout << "assume read insert size var: 150\n";
@@ -271,8 +274,8 @@ auto align(
   const auto start = high_resolution_clock::now();
   for (auto i = 0; i < thread_num; i++)
     workers.emplace_back(
-        do_work, std::ref(fq1), std::ref(fq2), std::cref(aligner),
-        /*std::ref(fout),*/ i, std::ref(fouts));
+        do_work, std::ref(fq1), std::ref(fq2), std::cref(aligner), i, std::ref(fouts),
+        "\tRG:Z:" + RGID);
   for (auto& worker : workers) worker.join();
   const auto end = high_resolution_clock::now();
   const auto dur = duration_cast<seconds>(end - start);
@@ -281,6 +284,16 @@ auto align(
 }
 
 auto main(int argc, char* argv[]) -> int {
+  if (argc == 1) {
+    std::cout << R"(
+Contact: Hewill Kang <hewillk@gmail.com>
+Command:
+         ./hewill index <hs37d5.fa>
+         ./hewill align <hs37d5.fa> <in1.fq> <in2.fq> <sam_prefix> <sample_name> <read_group_id> <thread_num>
+
+)";
+    return 0;
+  }
   const auto cmd = argv[1];
   if (cmd == "index"s) index(argv[2]);  // fa
   else if (cmd == "align"s)

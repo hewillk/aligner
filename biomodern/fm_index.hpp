@@ -8,9 +8,9 @@
 #include <thread>
 #include <vector>
 
-#include "xibit_vector.hpp"
 #include "istring.hpp"
 #include "serializer.hpp"
+#include "xibit_vector.hpp"
 
 namespace biomodern {
 
