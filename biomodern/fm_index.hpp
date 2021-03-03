@@ -8,7 +8,7 @@
 #include <thread>
 #include <vector>
 
-#include "dibit_vector.hpp"
+#include "xibit_vector.hpp"
 #include "istring.hpp"
 #include "serializer.hpp"
 
