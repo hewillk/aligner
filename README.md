@@ -1,5 +1,6 @@
 # Hewill Aligner
 Hewill Aligner is a highly optimized Burrow-Wheeler Aligner (using with modern C++20) specifically for Illumina HiSeq 2500 Rapid Mode WGS short-read alignment.
+**The elapsed time of mapping sequencing data with 50× coverage (2×180GB) is less than 2 hours under 80 cores and ~18 GB memory usage and has comparable performance to [bwa-mem2]。**
 
 ## Compiler
 - GCC >= 10.2
