@@ -11,12 +11,14 @@ Hewill Aligner is a highly optimized Burrow-Wheeler Aligner (implement using mod
 ```
 $ g++-10 main.cpp -o hewill -pthread -ltbb -std=c++20 -O3 biomodern/ssw.cpp -Wno-ignored-attributes
 ```
-### index (only support for uncompressed hs37d5.fa, [download])
+### index
+- Only support for uncompressed hs37d5.fa. ([download])
 - **The suffix array sorting time is less than 3 minutes under 80 cores and ~20 GB memory usage.**
 ```
 $ ./hewill index /mnt/fa/hs37d5.fa
 ```
-### align (only support for uncompressed fastq)
+### align
+- Only support for uncompressed fastq.
 - The following command will generate *HG001.1.sam*, *HG001.2.sam*, ... *HG001.X.sam* and *HG001.Y.sam* in */mnt/sam/HG001* folder.
 ```
 // fa_path fq1_path fq2_path sam_prefix sample_name(SM) read_group(RGID) thread_num
@@ -24,7 +26,7 @@ $ ./hewill align /mnt/fa/hs37d5.fa /mnt/fq/HG001.1.fq /mnt/fq/HG001.2.fq /mnt/sa
 ```
 
 ## Performance
-precisionFDA [Truth Challenge] versus [bwa-mem2]:
+PrecisionFDA [Truth Challenge] versus [bwa-mem2]:
 <img src="https://raw.githubusercontent.com/hewillk/aligner/master/performance.png" />
 
 ## Important
