@@ -1,21 +1,22 @@
 # Hewill Aligner
 Hewill Aligner is a highly optimized Burrow-Wheeler Aligner (implement using modern C++20) specifically for Illumina HiSeq 2500 Rapid Mode WGS short-read alignment.
-**The elapsed time of mapping sequencing data with 50× coverage (2×180GB) is less than 2 hours under 80 cores and ~18 GB memory usage and has comparable performance to [bwa-mem2]。**
+**The elapsed time of mapping sequencing data with 50× coverage (2×180GB) is less than 2 hours under 80 cores and ~18 GB memory usage and has comparable performance to [bwa-mem2].**
 
 ## Compiler
 - GCC >= 10.2
 - Intel Threading Building Blocks (`sudo apt install libtbb-dev`)
 
 ## Run
-- build executable
+### build executable
 ```
 $ g++-10 main.cpp -o hewill -pthread -ltbb -std=c++20 -O3 biomodern/ssw.cpp -Wno-ignored-attributes
 ```
-- index (only support for uncompressed hs37d5.fa, [download])
+### index (only support for uncompressed hs37d5.fa, [download])
+- **The suffix array sorting time is less than 3 minutes under 80 cores and ~20 GB memory usage.**
 ```
 $ ./hewill index /mnt/fa/hs37d5.fa
 ```
-- align (only support for uncompressed fastq)
+### align (only support for uncompressed fastq)
 - The following command will generate *HG001.1.sam*, *HG001.2.sam*, ... *HG001.X.sam* and *HG001.Y.sam* in */mnt/sam/HG001* folder.
 ```
 // fa_path fq1_path fq2_path sam_prefix sample_name(SM) read_group(RGID) thread_num
