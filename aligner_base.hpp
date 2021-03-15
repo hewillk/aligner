@@ -11,6 +11,9 @@ namespace biomodern::inline algorithm {
 using utility::istring_view;
 
 struct AlignerBase {
+  const int INSERT_MEAN = 550;
+  const int INSERT_VAR = 150;
+
   constexpr static auto MAX_HIT_CNT = 512;
   constexpr static auto MAX_EM_CNT = 128;
   constexpr static auto MAX_SW_CNT = 32;
@@ -20,7 +23,6 @@ struct AlignerBase {
   constexpr static auto SEED_LEN = 19;
   constexpr static auto SEED_OVERLAP = 4;
   constexpr static auto EXTEND = 100;
-  constexpr static auto PAIR_DIST = 1200;
   constexpr static auto SW_THRESHOLD = 30;
   constexpr static auto KMER_SIZE = 8;
   constexpr static auto MIN_FIND_CNT = 4;
@@ -28,7 +30,8 @@ struct AlignerBase {
   constexpr static auto MAX_SW_DIFF = 30;
   constexpr static auto PEN_UNPAIRED = 19;
 
-  static auto print() {
+  auto print() {
+    std::cout << "================== constexpr argument ==================\n";
     std::cout << "MAX_HIT_CNT: " << MAX_HIT_CNT << "\n";
     std::cout << "MAX_EM_CNT: " << MAX_EM_CNT << "\n";
     std::cout << "MAX_SW_CNT: " << MAX_SW_CNT << "\n";
@@ -38,13 +41,17 @@ struct AlignerBase {
     std::cout << "SEED_LEN: " << SEED_LEN << "\n";
     std::cout << "SEED_OVERLAP: " << SEED_OVERLAP << "\n";
     std::cout << "EXTEND: " << EXTEND << "\n";
-    std::cout << "PAIR_DIST: " << PAIR_DIST << "\n";
     std::cout << "SW_THRESHOLD: " << SW_THRESHOLD << "\n";
     std::cout << "KMER_SIZE: " << KMER_SIZE << "\n";
     std::cout << "MIN_FIND_CNT: " << MIN_FIND_CNT << "\n";
     std::cout << "MAX_FIND_CNT_DIFF: " << MAX_FIND_CNT_DIFF << "\n";
     std::cout << "MAX_SW_DIFF: " << MAX_SW_DIFF << "\n";
     std::cout << "PEN_UNPAIRED: " << PEN_UNPAIRED << "\n";
+
+    std::cout << "================== const argument ==================\n";
+    std::cout << "INSERT_MEAN: " << INSERT_MEAN << "\n";
+    std::cout << "INSERT_VAR: " << INSERT_VAR << "\n";
+    std::cout << "PAIR_DIST: " << INSERT_MEAN + 4 * INSERT_VAR + 50 << "\n";
   }
 
   constexpr static auto DIFF = [](const auto a, const auto b) {
@@ -349,7 +356,7 @@ struct AlignerBase {
   }
 
   // O(NlogN) pairing
-  static auto pairing2(std::vector<Aln> alns1, std::vector<Aln> alns2) {
+  static auto pairing2(std::vector<Aln> alns1, std::vector<Aln> alns2, int PAIR_DIST) {
     std::ranges::sort(alns1);
     std::ranges::sort(alns2);
     auto aln_pairs = std::vector<AlnPair>{};
