@@ -11,6 +11,24 @@ Hewill Aligner is a highly optimized Burrow-Wheeler Aligner (implement using mod
 ```
 $ g++-10 main.cpp -o hewill -pthread -ltbb -std=c++20 -O3 biomodern/ssw.cpp -Wno-ignored-attributes
 ```
+### Command
+```
+Command:
+         ./hewill index <hs37d5.fa>
+         ./hewill align <hs37d5.fa> <in1.fq> <in2.fq> <sam_prefix> <sample_name> <read_group_id> [insert_mean] [insert_var] [thread_num]
+Required Arguments:
+       <hs37d5.fa>          Reference sequence hs37d5.fa file path
+       <in1.fq>             Read1 FASTQ path
+       <in2.fq>             Read2 FASTQ path
+       <sam_prefix>         SAM file output prefix
+       <sample_name>        SAM file SM tag value
+       <read_group_id>      SAM file RGID tag value
+       
+Optional Arguments:
+       [insert_mean]        Mean insert size of the paired-end data, default value is 550
+       [insert_var]         Variance insert size of the paired-end data, default value is 150
+       [thread_num]         Number of threads, default value is return value of std::thread::hardware_concurrency()
+```
 ### index
 - Only support for uncompressed hs37d5.fa. ([download])
 - **The suffix array sorting time is less than 3 minutes under 80 cores and ~20 GB memory usage.**
