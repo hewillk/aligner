@@ -13,6 +13,8 @@ using namespace std::chrono;
 auto total = 0ul;
 auto mutex = std::mutex{};
 auto mutex2 = std::mutex{};
+constexpr auto default_insert_mean = 550;
+constexpr auto default_insert_var = 150;
 
 auto encode_fa(std::string fa_path) {
   auto ref = ""_is;
@@ -223,14 +225,18 @@ void do_work(
 
 auto align(
     std::string fa_path, std::string fq1_path, std::string fq2_path, std::string sam_prefix,
-    std::string SM, std::string RGID, int thread_num) {
+    std::string SM, std::string RGID, int insert_mean, int insert_var, int thread_num) {
   std::cout << "fa path: " << fa_path << "\n";
   std::cout << "fq1 path: " << fq1_path << "\n";
   std::cout << "fq2 path: " << fq2_path << "\n";
 
-  std::cout << "assume read length: ~148bp\n";
-  std::cout << "assume read insert size mean: ~550bp\n";
-  std::cout << "assume read insert size var: ~150bp\n";
+  std::cout << "thread_num: " << thread_num << "\n";
+  std::cout << "read length: 148 ~ 150bp\n";
+  std::cout << "read insert size mean: " << insert_mean << "\n";
+  std::cout << "read insert size var: " << insert_var << "\n";
+
+  auto aligner = Aligner{insert_mean, insert_var};
+  aligner.print();
 
   assert(fa_path.ends_with("hs37d5.fa"));
   const auto ref_path = fa_path.substr(0, fa_path.size() - 2) + "iref";
@@ -245,8 +251,6 @@ auto align(
 
   // add padding base to prevent out of bounds in a rare case
   for (auto i = 0; i < 1300; i++) ref.push_back(0);
-  auto aligner = Aligner{};
-  aligner.print();
   aligner.ref_ = ref;
 
   const auto fmi_path = fa_path.substr(0, fa_path.size() - 2) + "fmi";
@@ -270,8 +274,6 @@ auto align(
   assert(fq1);
   assert(fq2);
 
-  std::cout << "using " << thread_num << " threads.\n";
-  std::cout << "start mapping...\n";
   auto workers = std::vector<std::thread>{};
   const auto start = high_resolution_clock::now();
   for (auto i = 0; i < thread_num; i++)
@@ -292,16 +294,35 @@ auto main(int argc, char* argv[]) -> int {
 Contact: Hewill Kang <hewillk@gmail.com>
 Command:
          ./hewill index <hs37d5.fa>
-         ./hewill align <hs37d5.fa> <in1.fq> <in2.fq> <sam_prefix> <sample_name> <read_group_id> <thread_num>
+         ./hewill align <hs37d5.fa> <in1.fq> <in2.fq> <sam_prefix> <sample_name> <read_group_id> [insert_mean] [insert_var] [thread_num]
+
+Required Arguments:
+       <hs37d5.fa>          Reference sequence hs37d5.fa file path
+       <in1.fq>             Read1 FASTQ path
+       <in2.fq>             Read2 FASTQ path
+       <sam_prefix>         SAM file output prefix
+       <sample_name>        SAM file SM tag value
+       <read_group_id>      SAM file RGID tag value
+       
+Optional Arguments:
+       [insert_mean]        Mean insert size of the paired-end data, default value is 550
+       [insert_var]         Variance insert size of the paired-end data, default value is 150
+       [thread_num]         Number of threads, default value is return value of std::thread::hardware_concurrency()
 
 )";
     return 0;
   }
   const auto cmd = argv[1];
-  if (cmd == "index"s) index(argv[2]);  // fa
-  else if (cmd == "align"s)
-    // fa fq1 fq2 sam_prefix SM RGID thread_num
-    align(argv[2], argv[3], argv[4], argv[5], argv[6], argv[7], std::stoi(argv[8]));
-  else
+  if (cmd == "index"s && argc > 2) index(argv[2]);  // fa
+  else if (cmd == "align"s && argc > 7) {
+    // fa fq1 fq2 sam_prefix SM RGID thread_num insert_mean insert_var thread_num
+    const auto insert_mean = argc > 8 ? std::stoi(argv[8]) : default_insert_mean;
+    const auto insert_var = argc > 9 ? std::stoi(argv[9]) : default_insert_var;
+    const auto thread_num = argc > 10 ? std::stoi(argv[10]) : std::thread::hardware_concurrency();
+    align(
+        argv[2], argv[3], argv[4], argv[5], argv[6], argv[7], insert_mean, insert_var, thread_num);
+  } else {
+    std::cout << "Error: Missing command or arguments\n";
     goto Usage;
+  }
 }
