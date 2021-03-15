@@ -1,5 +1,5 @@
 # Hewill Aligner
-Hewill Aligner is a highly optimized Burrow-Wheeler Aligner (implement using modern C++20) specifically for Illumina HiSeq 2500 Rapid Mode WGS short-read alignment.
+Hewill Aligner is a highly optimized Burrow-Wheeler Aligner (implement using modern C++20) specifically for paired-end short read alignment with read length ~150 bp.
 **The elapsed time of mapping sequencing data with 50× coverage (2×180GB) is less than 2 hours under 80 cores and ~18 GB memory usage and has comparable performance to [bwa-mem2].**
 
 ## Compiler
@@ -31,8 +31,7 @@ PrecisionFDA [Truth Challenge] benchmark versus [bwa-mem2]:
 
 ## Important
 This aligner is highly optimized on the following sequencing characteristic (other datasets are not recommended):
-- read length: **~148bp**
-- insert size: **~550bp**
+- read length: **~150bp**
 
 [bwa-mem2]: https://github.com/bwa-mem2/bwa-mem2
 [Truth Challenge]: https://precision.fda.gov/challenges/truth
