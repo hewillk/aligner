@@ -274,7 +274,7 @@ struct Aligner : AlignerBase {
       const std::vector<Aln>& alns1, const std::vector<Aln>& alns2, istring_view read2,
       istring_view rread2, auto& profile2, auto& rprofile2,
       const std::vector<std::uint32_t>& kmers2, const std::vector<std::uint32_t>& rkmers2,
-      std::vector<bool>& table, int min_find_cnt) const {
+      std::vector<bool>& table, int min_find_cnt, int PAIR_DIST) const {
     const auto [opt_score, sub_score, sub_cnt] =
         utility::get_opt_subopt_count(alns1 | std::views::transform(&Aln::score));
     const auto rescue_cnt = std::min(sub_cnt + 1, MAX_RESCUE_CNT);
@@ -287,7 +287,7 @@ struct Aligner : AlignerBase {
     for (auto min_score = SW_THRESHOLD; const auto& aln1 : alns1 | std::views::take(rescue_cnt)) {
       const auto pos1 = aln1.pos;
       if (std::ranges::any_of(
-              alns2, [pos1](const auto pos2) { return DIFF(pos1, pos2) <= PAIR_DIST; },
+              alns2, [pos1, PAIR_DIST](const auto pos2) { return DIFF(pos1, pos2) <= PAIR_DIST; },
               &Aln::pos)) {
 #ifdef DEBUG
         std::cout << "pos: " << pos1 << " already seen.\n";
@@ -353,8 +353,8 @@ struct Aligner : AlignerBase {
     }
   }
 
-  static auto insert_penalty(int dist) {
-    const auto ns = (dist - 550) / 150.;
+  auto insert_penalty(int dist) const {
+    const auto ns = (dist - INSERT_MEAN) / static_cast<double>(INSERT_VAR);
     return static_cast<int>(std::pow(ns, 2));
     // return static_cast<int>(.721 * std::log(2. * std::erfc(std::fabs(ns) * M_SQRT1_2)) + .499);
   }
@@ -413,6 +413,8 @@ struct Aligner : AlignerBase {
 
   auto map(istring_view read1, istring_view rread1, istring_view read2, istring_view rread2) const
       -> AlnPair {
+    const auto PAIR_DIST = INSERT_MEAN + 4 * INSERT_VAR + 50;
+
 #ifdef DEBUG
     std::cout << "--------------- seeding read1 ---------------\n";
 #endif
@@ -480,12 +482,14 @@ struct Aligner : AlignerBase {
     std::cout << "\n************ force rescue read1 ************\n";
 #endif
     auto rescues1 = rescue(
-        alns2, alns1, read1, rread1, profile1, rprofile1, kmers1, rkmers1, table, min_find_cnt1);
+        alns2, alns1, read1, rread1, profile1, rprofile1, kmers1, rkmers1, table, min_find_cnt1,
+        PAIR_DIST);
 #ifdef DEBUG
     std::cout << "\n************ force rescue read2 ************\n";
 #endif
     auto rescues2 = rescue(
-        alns1, alns2, read2, rread2, profile2, rprofile2, kmers2, rkmers2, table, min_find_cnt2);
+        alns1, alns2, read2, rread2, profile2, rprofile2, kmers2, rkmers2, table, min_find_cnt2,
+        PAIR_DIST);
 
     if (!rescues1.empty()) {
       std::ranges::copy(rescues1, std::back_inserter(alns1));
@@ -518,7 +522,7 @@ struct Aligner : AlignerBase {
     std::cout << "\n--------------- pairing ---------------\n";
 #endif
 
-    auto aln_pairs = pairing2(alns1, alns2);
+    auto aln_pairs = pairing2(alns1, alns2, PAIR_DIST);
     if (aln_pairs.empty()) {
 #ifdef DEBUG
       std::cout << "\n--------------- failed ---------------\n";
