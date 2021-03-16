@@ -50,8 +50,6 @@ PrecisionFDA [Truth Challenge] benchmark versus [bwa-mem2]:
 ## Important
 This aligner is highly optimized on the following sequencing characteristic (other datasets are not recommended):
 - read length: **148~150bp**
- 
-Suitable model: Illumina HiSeq 2500, NextSeq 550, and other sequencing machines with ~150 bp read length.
 
 If you know the mean and variance of the insert size of the sequencing data, we highly recommend you pass it into the aligner.
 
