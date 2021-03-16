@@ -1,5 +1,5 @@
 # Hewill Aligner
-Hewill Aligner is a highly optimized Burrow-Wheeler Aligner (implement using modern C++20) specifically for paired-end short read alignment with read length ~148 bp.
+Hewill Aligner is a highly optimized Burrow-Wheeler Aligner (implement using modern C++20) specifically for paired-end short read alignment with read length ~150 bp.
 **The elapsed time of mapping sequencing data with 50× coverage (2×180GB) is less than 2 hours under 80 cores and ~18 GB memory usage and has comparable performance to [bwa-mem2].**
 
 ## Compiler
