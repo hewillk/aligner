@@ -17,7 +17,7 @@ constexpr auto default_insert_mean = 550;
 constexpr auto default_insert_var = 150;
 
 auto encode_fa(std::string fa_path) {
-  auto ref = ""_is;
+  auto ref = istring{};
   ref.reserve(3137454505);
   auto fin = std::ifstream{fa_path};
   assert(fin);
@@ -240,7 +240,7 @@ auto align(
 
   assert(fa_path.ends_with("hs37d5.fa"));
   const auto ref_path = fa_path.substr(0, fa_path.size() - 2) + "iref";
-  auto ref = ""_is;
+  auto ref = istring{};
   {
     auto fin = std::ifstream{ref_path, std::ios::binary};
     assert(fin);
